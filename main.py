@@ -25,9 +25,21 @@ def todays_date():
     return datetime.date.today()
 
 
-# save to cvs
+# Today's total
+def todays_total(reader):
+    total = 0
+    next(reader, None)
+    today = str(todays_date())
+    for row in reader:
+        if row[0] == today:
+            total += int(row[2])
+    return total
+
+
+# save to csv
 def main():
     path = pathlib.Path("data/study_log.csv")
+    path.parent.mkdir(exist_ok=True)
 
     if not path.exists():
         with open(path, "w", newline="") as file:
@@ -37,13 +49,15 @@ def main():
     subject = study_subject()
     minutes = time_studied()
 
-    if minutes is None:
-        print("Invalid minutes")
-        return
-
     with open(path, "a", newline="") as file:
         writer = csv.writer(file)
         writer.writerow([todays_date(), subject, minutes])
+    print("Session Saved")
+
+    with open(path, "r", newline="") as file:
+        reader = csv.reader(file)
+        total = todays_total(reader)
+        print(f"Today's Total: {total} Minutes")
 
 
 if __name__ == "__main__":
