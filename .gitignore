@@ -3,5 +3,5 @@ __pycache__/
 .vscode/
 .DS_Store
 *.pyc
-src
-data
+src/
+data/
